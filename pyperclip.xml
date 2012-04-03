@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type='text/xsl' href='interface.xsl'?>
+<interface xmlns="http://zero-install.sourceforge.net/2004/injector/interface" uri="http://gfxmonk.net/dist/0install/pyperclip.xml">
+	<name>pyperclip</name>
+	<summary>A cross-platform clipboard module for Python</summary>
+	<publish xmlns="http://gfxmonk.net/dist/0install" mode="third-party"/>
+	<description>
+	A cross-platform clipboard module for Python
+	</description>
+	<homepage>http://coffeeghost.net/2010/10/09/pyperclip-a-cross-platform-clipboard-module-for-python/</homepage>
+	<group>
+		<requires interface="http://repo.roscidus.com/python/python"/>
+		<requires importance="recommended" interface="http://gfxmonk.net/dist/0install/xsel.xml"/>
+		<environment insert="" mode="prepend" name="PYTHONPATH"/>
+		<implementation id="sha1new=9f922be3879a4a9fef71a1e32a8ba4aac3c6d0c2" released="2012-04-02" version="1.3">
+			<manifest-digest sha256="2824fb5298ee3615d03ab7b9e6bafda3e4d2da57f8aa96e9503be67e076160da"/>
+			<archive href="http://gfxmonk.net/dist/0install/pyperclip/pyperclip-1.3.tgz" size="2110"/>
+		</implementation>
+	</group>
+	<group>
+		<requires interface="http://repo.roscidus.com/python/python"/>
+		<requires importance="recommended" interface="http://gfxmonk.net/dist/0install/xsel.xml"/>
+		<requires interface="http://gfxmonk.net/dist/0install/python-which.xml"/>
+		<environment insert="" mode="prepend" name="PYTHONPATH"/>
+		<implementation id="sha1new=2ab8daf00aebeb2542fa0ad387c9609212ec8c13" released="2012-04-03" version="1.4">
+			<manifest-digest sha256="e7893cd8686c1588e55a697f1d08e60840f0712ef8888bf2c9740ad07043f0af"/>
+			<archive href="http://gfxmonk.net/dist/0install/pyperclip/pyperclip-1.4.tgz" size="2214"/>
+		</implementation>
+	</group>
+</interface>

@@ -41,6 +41,7 @@
 # Change Log:
 # 1.2 Use the platform module to help determine OS.
 # 1.3 Changed ctypes.windll.user32.OpenClipboard(None) to ctypes.windll.user32.OpenClipboard(0), after some people ran into some TypeError
+# 1.4 Use python-which library instead of os.system, removing a bunch of noise
 
 import platform, os
 
@@ -121,6 +122,14 @@ def xselGetClipboard():
     return content
 
 
+def has_command(cmd):
+    from which import which, WhichError
+    try:
+        which(cmd)
+        return True
+    except WhichError as e:
+        return False
+
 if os.name == 'nt' or platform.system() == 'Windows':
     import ctypes
     getcb = winGetClipboard
@@ -129,12 +138,12 @@ elif os.name == 'mac' or platform.system() == 'Darwin':
     getcb = macGetClipboard
     setcb = macSetClipboard
 elif os.name == 'posix' or platform.system() == 'Linux':
-    xclipExists = os.system('which xclip') == 0
+    xclipExists = has_command('xclip')
     if xclipExists:
         getcb = xclipGetClipboard
         setcb = xclipSetClipboard
     else:
-        xselExists = os.system('which xsel') == 0
+        xselExists = has_command('xsel')
         if xselExists:
             getcb = xselGetClipboard
             setcb = xselSetClipboard
