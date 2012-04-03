@@ -110,12 +110,12 @@ def xclipGetClipboard():
     return content
 
 def xselSetClipboard(text):
-    outf = os.popen('xsel -i', 'w')
+    outf = os.popen('xsel -ib', 'w')
     outf.write(text)
     outf.close()
 
 def xselGetClipboard():
-    outf = os.popen('xsel -o', 'r')
+    outf = os.popen('xsel -ob', 'r')
     content = outf.read()
     outf.close()
     return content
@@ -138,19 +138,20 @@ elif os.name == 'posix' or platform.system() == 'Linux':
         if xselExists:
             getcb = xselGetClipboard
             setcb = xselSetClipboard
-        try:
-            import gtk
-            getcb = gtkGetClipboard
-            setcb = gtkSetClipboard
-        except:
+        else:
             try:
-                import PyQt4.QtCore
-                import PyQt4.QtGui
-                app = QApplication([])
-                cb = PyQt4.QtGui.QApplication.clipboard()
-                getcb = qtGetClipboard
-                setcb = qtSetClipboard
-            except:
-                raise Exception('Pyperclip requires the gtk or PyQt4 module installed, or the xclip command.')
+                import gtk
+                getcb = gtkGetClipboard
+                setcb = gtkSetClipboard
+            except ImportError:
+                try:
+                    import PyQt4.QtCore
+                    import PyQt4.QtGui
+                    app = QApplication([])
+                    cb = PyQt4.QtGui.QApplication.clipboard()
+                    getcb = qtGetClipboard
+                    setcb = qtSetClipboard
+                except ImportError:
+                    raise ImportError('Pyperclip requires the gtk or PyQt4 module installed, or the xclip command.')
 copy = setcb
 paste = getcb
