@@ -29,19 +29,18 @@
 	</group>
 	<group>
 		<requires interface="http://repo.roscidus.com/python/python"/>
-		<requires interface="http://repo.roscidus.com/python/python">
-			<version before="3"/>
-		</requires>
 		<requires importance="recommended" interface="http://gfxmonk.net/dist/0install/xsel.xml"/>
 		<requires interface="http://gfxmonk.net/dist/0install/python-which.xml"/>
 		<command name="run" path="pyperclip.py">
 			<runner interface="http://repo.roscidus.com/python/python"/>
 		</command>
-		<command name="test" path="test.sh">
+		<command name="test" path="test_pyperclip.sh">
 			<environment insert="" mode="prepend" name="PATH"/>
 		</command>
 		<environment insert="" mode="prepend" name="PYTHONPATH"/>
-		<implementation id="." version="1.4-post">
+		<implementation id="sha1new=a25d2ead10c70b8abc9106c4453b78899ba753df" released="2012-04-16" version="1.5">
+			<manifest-digest sha256="0a7672a2359a65d4eed5a22cb10e220080a7039df009422b820ab3ef5098932e"/>
+			<archive href="http://gfxmonk.net/dist/0install/pyperclip/pyperclip-1.5.tgz" size="2876"/>
 		</implementation>
 	</group>
 </interface>

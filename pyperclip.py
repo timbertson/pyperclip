@@ -44,7 +44,7 @@ from __future__ import print_function
 # 1.2 Use the platform module to help determine OS.
 # 1.3 Changed ctypes.windll.user32.OpenClipboard(None) to ctypes.windll.user32.OpenClipboard(0), after some people ran into some TypeError
 # 1.4 Use python-which library instead of os.system, removing a bunch of noise
-# 1.5 add Cygwin support
+# 1.5 add Cygwin support, command line interface & cleaned up command usage
 
 import platform, os, subprocess, sys
 
@@ -77,17 +77,6 @@ def winSetClipboard(text):
     ctypes.windll.user32.SetClipboardData(1,hCd)
     ctypes.windll.user32.CloseClipboard()
 
-def macSetClipboard(text):
-    outf = os.popen('pbcopy', 'w')
-    outf.write(text)
-    outf.close()
-
-def macGetClipboard():
-    outf = os.popen('pbpaste', 'r')
-    content = outf.read()
-    outf.close()
-    return content
-
 def gtkGetClipboard():
     return gtk.Clipboard().wait_for_text()
 
@@ -101,28 +90,6 @@ def qtGetClipboard():
 
 def qtSetClipboard(text):
     cb.setText(text)
-
-def xclipSetClipboard(text):
-    outf = os.popen('xclip -selection c', 'w')
-    outf.write(text)
-    outf.close()
-
-def xclipGetClipboard():
-    outf = os.popen('xclip -selection c -o', 'r')
-    content = outf.read()
-    outf.close()
-    return content
-
-def xselSetClipboard(text):
-    outf = os.popen('xsel -ib', 'w')
-    outf.write(text)
-    outf.close()
-
-def xselGetClipboard():
-    outf = os.popen('xsel -ob', 'r')
-    content = outf.read()
-    outf.close()
-    return content
 
 def has_command(cmd):
     from which import which, WhichError
@@ -144,7 +111,7 @@ class CommandClipboard(object):
 
     def copy(self, data):
         p = subprocess.Popen(self._copy, stdin=subprocess.PIPE)
-        out, err = p.communicate(data.encode('utf-8'))
+        out, err = p.communicate(data)
         assert p.returncode == 0
 
     def paste(self):
@@ -205,7 +172,7 @@ if __name__ == '__main__':
     assert len(args) == 0
     args = []
     if opts.action is copy:
-        lines = sys.stdin.read.splitlines(keepends=True)
+        lines = sys.stdin.read().splitlines(True)
         if not lines[-1].rstrip('\r\n'):
             lines.pop(-1)
         args.append(''.join(lines))
