@@ -27,4 +27,21 @@
 			<archive href="http://gfxmonk.net/dist/0install/pyperclip/pyperclip-1.4.tgz" size="2214"/>
 		</implementation>
 	</group>
+	<group>
+		<requires interface="http://repo.roscidus.com/python/python"/>
+		<requires interface="http://repo.roscidus.com/python/python">
+			<version before="3"/>
+		</requires>
+		<requires importance="recommended" interface="http://gfxmonk.net/dist/0install/xsel.xml"/>
+		<requires interface="http://gfxmonk.net/dist/0install/python-which.xml"/>
+		<command name="run" path="pyperclip.py">
+			<runner interface="http://repo.roscidus.com/python/python"/>
+		</command>
+		<command name="test" path="test.sh">
+			<environment insert="" mode="prepend" name="PATH"/>
+		</command>
+		<environment insert="" mode="prepend" name="PYTHONPATH"/>
+		<implementation id="." version="1.4-post">
+		</implementation>
+	</group>
 </interface>

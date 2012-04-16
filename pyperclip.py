@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+from __future__ import print_function
 # Pyperclip v1.3
 # A cross-platform clipboard module for Python. (only handles plain text for now)
 # By Al Sweigart al@coffeeghost.net
@@ -42,8 +44,9 @@
 # 1.2 Use the platform module to help determine OS.
 # 1.3 Changed ctypes.windll.user32.OpenClipboard(None) to ctypes.windll.user32.OpenClipboard(0), after some people ran into some TypeError
 # 1.4 Use python-which library instead of os.system, removing a bunch of noise
+# 1.5 add Cygwin support
 
-import platform, os
+import platform, os, subprocess, sys
 
 def winGetClipboard():
     ctypes.windll.user32.OpenClipboard(0)
@@ -121,7 +124,6 @@ def xselGetClipboard():
     outf.close()
     return content
 
-
 def has_command(cmd):
     from which import which, WhichError
     try:
@@ -130,37 +132,83 @@ def has_command(cmd):
     except WhichError as e:
         return False
 
+class CommandClipboard(object):
+    def __init__(self, copy, paste):
+        self._copy = copy
+        self._paste = paste
+        self.required_cmds = set([copy[0], paste[0]])
+
+    @property
+    def available(self):
+        return all(map(has_command, self.required_cmds))
+
+    def copy(self, data):
+        p = subprocess.Popen(self._copy, stdin=subprocess.PIPE)
+        out, err = p.communicate(data.encode('utf-8'))
+        assert p.returncode == 0
+
+    def paste(self):
+        p = subprocess.Popen(self._paste, stdout=subprocess.PIPE)
+        out, err = p.communicate()
+        assert p.returncode == 0
+        if sys.version_info > (3,):
+            out = out.decode('utf-8')
+        return out
+
+    def use(self):
+        global getcb, setcb
+        getcb = self.paste
+        setcb = self.copy
+
 if os.name == 'nt' or platform.system() == 'Windows':
     import ctypes
     getcb = winGetClipboard
     setcb = winSetClipboard
 elif os.name == 'mac' or platform.system() == 'Darwin':
-    getcb = macGetClipboard
-    setcb = macSetClipboard
-elif os.name == 'posix' or platform.system() == 'Linux':
-    xclipExists = has_command('xclip')
-    if xclipExists:
-        getcb = xclipGetClipboard
-        setcb = xclipSetClipboard
+    CommandClipboard(copy=['pbcopy'],paste=['pbpaste']).use()
+else:
+    possible_impls = [
+        CommandClipboard(copy = ['getclip'], paste=['putclip']), # cygwin
+        CommandClipboard(copy = ['xsel','-ib'], paste=['xsel','-b']),
+        CommandClipboard(copy = ['xclip', '-selection', 'clipboard','-i'], paste=['xsel', '-selection', 'clipboard', '-o'])
+    ]
+
+    for impl in possible_impls:
+        if impl.available:
+            impl.use()
+            break
     else:
-        xselExists = has_command('xsel')
-        if xselExists:
-            getcb = xselGetClipboard
-            setcb = xselSetClipboard
-        else:
+        try:
+            import gtk
+            getcb = gtkGetClipboard
+            setcb = gtkSetClipboard
+        except ImportError:
             try:
-                import gtk
-                getcb = gtkGetClipboard
-                setcb = gtkSetClipboard
+                import PyQt4.QtCore
+                import PyQt4.QtGui
+                app = QApplication([])
+                cb = PyQt4.QtGui.QApplication.clipboard()
+                getcb = qtGetClipboard
+                setcb = qtSetClipboard
             except ImportError:
-                try:
-                    import PyQt4.QtCore
-                    import PyQt4.QtGui
-                    app = QApplication([])
-                    cb = PyQt4.QtGui.QApplication.clipboard()
-                    getcb = qtGetClipboard
-                    setcb = qtSetClipboard
-                except ImportError:
-                    raise ImportError('Pyperclip requires the gtk or PyQt4 module installed, or the xclip command.')
+                raise ImportError('Pyperclip requires the gtk or PyQt4 module installed, or some sort of xclip / xsel / getclip command.')
+
 copy = setcb
 paste = getcb
+
+if __name__ == '__main__':
+    from optparse import OptionParser
+    p = OptionParser()
+    p.add_option('-i','--copy', action='store_const', const=copy, dest='action', default=paste)
+    p.add_option('-o','--paste', action='store_const', const=paste, dest='action')
+    opts, args = p.parse_args()
+    assert len(args) == 0
+    args = []
+    if opts.action is copy:
+        lines = sys.stdin.read.splitlines(keepends=True)
+        if not lines[-1].rstrip('\r\n'):
+            lines.pop(-1)
+        args.append(''.join(lines))
+    ret = opts.action(*args)
+    if ret is not None:
+        print(ret)
