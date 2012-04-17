@@ -135,7 +135,7 @@ elif os.name == 'mac' or platform.system() == 'Darwin':
     CommandClipboard(copy=['pbcopy'],paste=['pbpaste']).use()
 else:
     possible_impls = [
-        CommandClipboard(copy = ['getclip'], paste=['putclip']), # cygwin
+        CommandClipboard(copy = ['putclip'], paste=['getclip']), # cygwin
         CommandClipboard(copy = ['xsel','-ib'], paste=['xsel','-b']),
         CommandClipboard(copy = ['xclip', '-selection', 'clipboard','-i'], paste=['xsel', '-selection', 'clipboard', '-o'])
     ]
