@@ -38,9 +38,9 @@
 			<environment insert="" mode="prepend" name="PATH"/>
 		</command>
 		<environment insert="" mode="prepend" name="PYTHONPATH"/>
-		<implementation id="sha1new=a25d2ead10c70b8abc9106c4453b78899ba753df" released="2012-04-16" version="1.5">
-			<manifest-digest sha256="0a7672a2359a65d4eed5a22cb10e220080a7039df009422b820ab3ef5098932e"/>
-			<archive href="http://gfxmonk.net/dist/0install/pyperclip/pyperclip-1.5.tgz" size="2876"/>
+		<implementation id="sha1new=00c2c51c68273d47eb96c5145c2e48982d6bf357" released="2012-04-17" version="1.5">
+			<manifest-digest sha256="fc28e87d0e99f432e6fed1f0d36ba2d22f0a40826917a271621578a5b0f16b9b"/>
+			<archive href="http://gfxmonk.net/dist/0install/pyperclip/pyperclip-1.5.tgz" size="2883"/>
 		</implementation>
 	</group>
 </interface>
