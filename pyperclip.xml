@@ -36,6 +36,7 @@
 		</command>
 		<command name="test" path="test_pyperclip.sh">
 			<environment insert="" mode="prepend" name="PATH"/>
+			<runner interface="http://gfxmonk.net/dist/0install/ephemeral-x.xml"/>
 		</command>
 		<environment insert="" mode="prepend" name="PYTHONPATH"/>
 		<implementation id="sha1new=00c2c51c68273d47eb96c5145c2e48982d6bf357" released="2012-04-17" version="1.5">
