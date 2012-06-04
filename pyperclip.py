@@ -111,6 +111,8 @@ class CommandClipboard(object):
 
     def copy(self, data):
         p = subprocess.Popen(self._copy, stdin=subprocess.PIPE)
+        if sys.version_info > (3,):
+            data = data.encode('utf-8')
         out, err = p.communicate(data)
         assert p.returncode == 0
 
