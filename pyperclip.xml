@@ -43,5 +43,9 @@
 			<manifest-digest sha256="fc28e87d0e99f432e6fed1f0d36ba2d22f0a40826917a271621578a5b0f16b9b"/>
 			<archive href="http://gfxmonk.net/dist/0install/pyperclip/pyperclip-1.5.tgz" size="2883"/>
 		</implementation>
+		<implementation id="sha1new=8eca5c09360279258c6da388a4653254c64db7f7" released="2012-06-04" version="0.5.1">
+			<manifest-digest sha256="3f0fd6b4e9b74284f2e4f2d96938af25ecd10c53d837a445ef80c1f74f6ae0e3"/>
+			<archive href="http://gfxmonk.net/dist/0install/pyperclip/pyperclip-0.5.1.tgz" size="2898"/>
+		</implementation>
 	</group>
 </interface>
