@@ -155,7 +155,6 @@ else:
             try:
                 import PyQt4.QtCore
                 import PyQt4.QtGui
-                app = QApplication([])
                 cb = PyQt4.QtGui.QApplication.clipboard()
                 getcb = qtGetClipboard
                 setcb = qtSetClipboard
