@@ -46,7 +46,7 @@ from __future__ import print_function
 # 1.4 Use python-which library instead of os.system, removing a bunch of noise
 # 1.5 add Cygwin support, command line interface & cleaned up command usage
 
-import platform, os, subprocess, sys
+import platform, os, subprocess, sys, re
 
 def winGetClipboard():
     ctypes.windll.user32.OpenClipboard(0)
@@ -173,10 +173,9 @@ if __name__ == '__main__':
     assert len(args) == 0
     args = []
     if opts.action is copy:
-        lines = sys.stdin.read().splitlines(True)
-        if not lines[-1].rstrip('\r\n'):
-            lines.pop(-1)
-        args.append(''.join(lines))
+        data = sys.stdin.read()
+        data = re.sub('\r?\n?$', '', data) # trim trailing NL
+        args.append(data)
     ret = opts.action(*args)
     if ret is not None:
         print(ret)
