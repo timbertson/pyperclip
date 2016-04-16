@@ -1,6 +1,9 @@
 pyperclip
 =========
 
+.. image:: http://gfxmonk.net/dist/status/project/pyperclip.png
+
+
 This is a cross-platform clipboard module for Python
 
 I got tired of not having a good cross-platform module for accessing the clipboard in Python, so I put this together. It is a module that loads ``copy()`` and ``paste()`` functions depending on what your operating system (or window manager) is.
